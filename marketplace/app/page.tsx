@@ -6,10 +6,13 @@ import { ethers } from "ethers";
 import { withProvider } from "@/src/hoc/withProvider";
 import { IWrapped } from "@/src/interfaces";
 
-const HomePage: FC<IWrapped> = ({ provider }) => {
+import NFTs from "@/src/components/NFTs";
+
+const HomePage: FC<IWrapped> = ({ provider, alchemy }) => {
   const [account, setAccount] = useState<string>();
   const [balance, setBalance] = useState<string>();
   const [network, setNetwork] = useState<string>();
+  const [nfts, setNfts] = useState();
 
   useEffect(() => {
     (async () => {
@@ -18,7 +21,6 @@ const HomePage: FC<IWrapped> = ({ provider }) => {
       const balance = await provider?.getBalance(await signer.getAddress());
       const network = await provider.getNetwork();
 
-      console.log(network);
       setAccount(await signer.getAddress());
       setBalance(ethers.formatEther(balance));
       setNetwork(network.chainId.toString());
@@ -31,6 +33,7 @@ const HomePage: FC<IWrapped> = ({ provider }) => {
       <div>Wallet address: {account && account}</div>
       <div>Balance: {balance && balance}</div>
       <div>Network: {network && network}</div>
+      <NFTs alchemy={alchemy} account={account!} />
     </div>
   );
 };
