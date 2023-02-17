@@ -18,16 +18,13 @@ async function main() {
   console.log(`NFT contract deployed at ${contractAddresses.nft}`);
 
   fs.writeFileSync(
-    `${contractsDir}\\contracts.json`,
+    `${contractsDir}/contracts.json`,
     JSON.stringify(contractAddresses)
   );
 
   const NFTArtifact = artifacts.readArtifactSync("NFT");
 
-  fs.writeFileSync(
-    `${contractsDir}\\abi\\NFT.json`,
-    JSON.stringify(NFTArtifact)
-  );
+  fs.writeFileSync(`${contractsDir}/abi/NFT.json`, JSON.stringify(NFTArtifact));
 }
 
 main().catch((error) => {
