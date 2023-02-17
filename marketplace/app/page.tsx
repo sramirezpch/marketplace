@@ -14,6 +14,10 @@ const HomePage: FC<IWrapped> = ({ provider, alchemy }) => {
   const [network, setNetwork] = useState<string>();
   const [nfts, setNfts] = useState();
 
+  const requestAccount = async () => {
+    await provider?.send("eth_requestAccounts", []);
+  };
+
   useEffect(() => {
     (async () => {
       if (!provider) return;
@@ -29,7 +33,7 @@ const HomePage: FC<IWrapped> = ({ provider, alchemy }) => {
 
   return (
     <div>
-      <button>Connect wallet</button>
+      <button onClick={requestAccount}>Connect wallet</button>
       <div>Wallet address: {account && account}</div>
       <div>Balance: {balance && balance}</div>
       <div>Network: {network && network}</div>
