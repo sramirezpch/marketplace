@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+  node:
+    image: hardhat
+    ports: 
+      - 31337:31337
+    networks:
+      - network
+  client:
+    image: marketplace-client
+    env_file:
+      - ./marketplace/.env
+    ports:
+      - 3000:3000
+    networks:
+      - network
+
+networks:
+  network: {}
