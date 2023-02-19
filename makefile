@@ -3,7 +3,7 @@ MARKETPLACE_DOCKERFILE_DEV="./infra/.dockerfile-dev"
 HARDHAT_IMAGE_NAME="hardhat-node"
 HARDHAT_DOCKERFILE="./infra/.dockerfile"
 
-COMPOSE_FILE="./docker/compose.yml"
+COMPOSE_FILE="./docker-compose.yml"
 
 CLIENT_LOCAL_URL="http://localhost:3000"
 
