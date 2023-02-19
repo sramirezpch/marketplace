@@ -2,12 +2,14 @@ version: '3.3'
 
 services:
   node:
+    container_name: hardhat-node
     image: hardhat-node
     ports: 
       - 31337:31337
     networks:
       - network
   client:
+    container_name: client
     image: marketplace-client
     # env_file:
     #   - ./marketplace/.env
