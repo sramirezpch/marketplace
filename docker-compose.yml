@@ -3,6 +3,9 @@ version: '3.3'
 services:
   node:
     container_name: hardhat-node
+    build:
+      context: .
+      dockerfile: ./infra/.dockerfile
     image: hardhat-node
     ports: 
       - 31337:31337
@@ -10,6 +13,9 @@ services:
       - network
   client:
     container_name: client
+    build: 
+      context: ./marketplace
+      dockerfile: ./infra/.dockerfile-dev
     image: marketplace-client
     # env_file:
     #   - ./marketplace/.env
