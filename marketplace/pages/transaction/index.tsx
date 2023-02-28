@@ -2,9 +2,10 @@ import { ethers } from "ethers";
 import type { NextPage } from "next";
 import { useRef } from "react";
 
-import { withProvider } from "../../src/interfaces";
+import { withProvider } from "../../src/hocs";
+import { IWrapped } from "../../src/interfaces";
 
-const TransactionPage: NextPage<withProvider> = ({ provider }) => {
+const TransactionPage: NextPage<IWrapped> = ({ provider }) => {
   const amountRef = useRef<HTMLInputElement>(null);
   const walletAddressRef = useRef<HTMLInputElement>(null);
 
@@ -53,4 +54,4 @@ const TransactionPage: NextPage<withProvider> = ({ provider }) => {
   );
 };
 
-export default TransactionPage;
+export default withProvider(TransactionPage);

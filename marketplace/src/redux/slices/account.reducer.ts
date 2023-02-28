@@ -27,9 +27,12 @@ export const accountSlice = createSlice({
         transactions: payload.transactions,
       };
     },
+    updateAccount: (state, action: PayloadAction<string>) => {
+      return { ...state, address: action.payload };
+    },
   },
 });
 
-export const { setAccount } = accountSlice.actions;
+export const { setAccount, updateAccount } = accountSlice.actions;
 
 export default accountSlice.reducer;
