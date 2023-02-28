@@ -6,7 +6,7 @@ export default function () {
   return (
     <nav
       className="bg-slate-500 flex items-center p-3"
-      style={{ height: "64px" }}
+      style={{ height: "64px", backgroundColor: "rgb(113 113 122)" }}
     >
       <div>
         <Link href="/" className={styles.logo}>

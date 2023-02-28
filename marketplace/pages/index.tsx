@@ -7,28 +7,36 @@ import { useAppSelector } from "../src/hooks/useAppSelector.hooks";
 
 import { setAccount } from "../src/redux/slices/account.reducer";
 
-import { withProvider } from "../src/interfaces";
+import { withProvider } from "../src/hocs";
+import { IWrapped } from "../src/interfaces";
 
-const Home: NextPage<withProvider> = ({ provider }) => {
+const Home: NextPage<IWrapped> = ({ provider }) => {
   const account = useAppSelector((state) => state.account);
   const dispatch = useAppDispatch();
 
-  console.log(account);
-
   useEffect(() => {
     (async () => {
-      const [account] = await provider.send("eth_requestAccounts", []);
-      const balance = ethers.utils
-        .parseEther((await provider.getBalance(account)).toString())
-        .toString();
+      if (!provider) {
+        console.log("NO PROVIDER");
+        return;
+      }
+      try {
+        console.log("PROVIDER");
+        const [account] = await provider.send("eth_requestAccounts", []);
+        const balance = ethers.utils
+          .parseEther((await provider.getBalance(account)).toString())
+          .toString();
+        console.log(account);
+        const transactions = await provider?.getTransactionCount(account);
 
-      const transactions = await provider.getTransactionCount(account);
-
-      dispatch(
-        setAccount({ address: account as string, balance, transactions })
-      );
+        dispatch(
+          setAccount({ address: account as string, balance, transactions })
+        );
+      } catch (error) {
+        console.error(error);
+      }
     })();
-  }, []);
+  }, [provider]);
 
   const requestAccount = async () => {
     console.log("Requesting account");
@@ -36,7 +44,10 @@ const Home: NextPage<withProvider> = ({ provider }) => {
 
   return (
     <div className="flex justify-between items-center p-3">
-      <button className="border-2 px-3 py-1 bg-white" onClick={requestAccount}>
+      <button
+        className="border-2 rounded-lg px-3 py-1 bg-white"
+        onClick={requestAccount}
+      >
         Connect wallet
       </button>
       <span className="text-black">{account.address}</span>
@@ -44,4 +55,4 @@ const Home: NextPage<withProvider> = ({ provider }) => {
   );
 };
 
-export default Home;
+export default withProvider(Home);
