@@ -1,33 +1,53 @@
+import { ethers } from "ethers";
 import type { NextPage } from "next";
 import { useRef } from "react";
 
-const TransactionPage: NextPage = () => {
-  const amountRef = useRef();
-  const walletAddressRef = useRef();
+import { withProvider } from "../../src/interfaces";
 
-  const executeTransaction = () => {
-    console.log("Executing transaction");
+const TransactionPage: NextPage<withProvider> = ({ provider }) => {
+  const amountRef = useRef<HTMLInputElement>(null);
+  const walletAddressRef = useRef<HTMLInputElement>(null);
+
+  const executeTransaction = async (e: any) => {
+    e.preventDefault();
+    if (!provider) return;
+    const signer = provider.getSigner();
+
+    const tx = await signer.sendTransaction({
+      to: walletAddressRef.current?.value,
+      value: ethers.utils.parseEther(amountRef.current!.value),
+    });
+
+    await tx.wait();
   };
+
   return (
-    <div className="w-full flex">
-      <div className="flex flex-col p-3 mx-auto bg-slate-500 gap-y-5 rounded-xl">
-        <label>
-          <span>Type the amount in ETH to send</span>
-          <input className="border-2 px-1 w-full" ref={amountRef.current} />
-        </label>
-        <label>
-          <span>Paste the wallet address to send the ETH</span>
-          <input
-            className="border-2 px-1 w-full"
-            ref={walletAddressRef.current}
-          />
-        </label>
-        <button
-          className="border-2 rounded-lg bg-white"
-          onClick={executeTransaction}
-        >
-          Send ETH
-        </button>
+    <div className="w-full pt-2 flex" style={{ height: "calc(100vh - 64px)" }}>
+      <div className="m-auto w-1/2">
+        <form className="bg-zinc-200 p-3 flex flex-col gap-y-3 rounded-lg">
+          <label className="flex flex-col gap-y-px">
+            <span>Type the amount in ETH to send</span>
+            <input
+              className="border-2 rounded-lg px-1 w-full h-9"
+              ref={amountRef}
+            />
+          </label>
+          <label className="flex flex-col gap-y-px">
+            <span>Paste the wallet address to send the ETH</span>
+            <input
+              className="border-2 rounded-lg px-1 w-full h-9"
+              ref={walletAddressRef}
+            />
+          </label>
+          <div>
+            <button
+              className="border-2 rounded-lg bg-white px-4 py-1.5"
+              onClick={executeTransaction}
+            >
+              Send ETH
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
