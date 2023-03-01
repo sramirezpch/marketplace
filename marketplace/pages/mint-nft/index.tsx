@@ -2,43 +2,38 @@ import type { NextPage } from "next";
 import axios from "axios";
 
 import NftAbi from "../../src/abi/NFT.json";
+import contracts from "../../src/contracts.json";
 
 import { IWrapped, PinFilAxiosResponse } from "../../src/interfaces";
 import { useContracts } from "../../src/hooks";
 import { withProvider } from "../../src/hocs";
+import { ethers } from "ethers";
 
 const MintPage: NextPage<IWrapped> = ({ provider }) => {
-  const { contracts, signer } = useContracts({
-    provider,
-    nftAbi: JSON.stringify(NftAbi.abi),
-  });
-
   const mintNft = async () => {
-    if (!contracts.nft || !signer) {
-      console.log({
-        nft: contracts.nft === undefined && "NFT contract is undefined",
-        signer: signer === undefined && "Signer is undefined",
-      });
-      return;
-    }
     let hash = undefined;
-
+    const nft = new ethers.Contract(
+      contracts.nft,
+      NftAbi.abi,
+      provider?.getSigner()
+    );
     try {
       const result = await axios.post<PinFilAxiosResponse, any>(
         "http://localhost:8080/pin-file",
         {
-          firstName: "Sergio1",
+          name: "Sergio1",
           lastName: "Ramirez1",
         }
       );
 
       hash = result.hash;
 
-      const tx = await contracts.nft.safeMint(
-        await signer.getAddress(),
+      const tx = await nft.safeMint(
+        await provider?.getSigner().getAddress(),
         `https://gateway.pinata.cloud/ipfs/${hash}`
       );
 
+      console.log(hash);
       await tx.wait();
 
       console.log(tx);
