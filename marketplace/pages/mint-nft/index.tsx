@@ -1,8 +1,9 @@
 import type { NextPage } from "next";
+import axios from "axios";
 
 import NftAbi from "../../src/abi/NFT.json";
 
-import { IWrapped } from "../../src/interfaces";
+import { IWrapped, PinFilAxiosResponse } from "../../src/interfaces";
 import { useContracts } from "../../src/hooks";
 import { withProvider } from "../../src/hocs";
 
@@ -20,12 +21,34 @@ const MintPage: NextPage<IWrapped> = ({ provider }) => {
       });
       return;
     }
-    const tx = await contracts.nft.safeMint(await signer.getAddress(), "");
+    let hash = undefined;
 
-    await tx.wait();
+    try {
+      const result = await axios.post<PinFilAxiosResponse, any>(
+        "http://localhost:8080/pin-file",
+        {
+          firstName: "Sergio1",
+          lastName: "Ramirez1",
+        }
+      );
 
-    const balance = await contracts.nft.balanceOf(await signer.getAddress());
-    console.log(balance);
+      hash = result.hash;
+
+      const tx = await contracts.nft.safeMint(
+        await signer.getAddress(),
+        `https://gateway.pinata.cloud/ipfs/${hash}`
+      );
+
+      await tx.wait();
+
+      console.log(tx);
+    } catch (err) {
+      if (hash) {
+        await axios.delete(`http://localhost:8080/unpin-file/${hash}`);
+      }
+
+      console.log(err);
+    }
   };
 
   return (
