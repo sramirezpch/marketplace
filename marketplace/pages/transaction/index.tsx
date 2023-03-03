@@ -14,9 +14,11 @@ const TransactionPage: NextPage<IWrapped> = ({ provider }) => {
     if (!provider) return;
     const signer = provider.getSigner();
 
+    const value: string = amountRef.current?.value || "";
+
     const tx = await signer.sendTransaction({
       to: walletAddressRef.current?.value,
-      value: ethers.utils.parseEther(amountRef.current!.value),
+      value: ethers.utils.parseEther(value),
     });
 
     await tx.wait();

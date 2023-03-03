@@ -17,11 +17,9 @@ const Home: NextPage<IWrapped> = ({ provider }) => {
   useEffect(() => {
     (async () => {
       if (!provider) {
-        console.log("NO PROVIDER");
         return;
       }
       try {
-        console.log("PROVIDER");
         const [account] = await provider.send("eth_requestAccounts", []);
         const balance = ethers.utils
           .parseEther((await provider.getBalance(account)).toString())

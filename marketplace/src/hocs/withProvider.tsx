@@ -19,6 +19,7 @@ export const withProvider = (WrappedComponent: FC<IWrapped>) => {
       global.window?.ethereum.on(
         "accountsChanged",
         (accounts: Array<string>) => {
+          console.log("Account changed!");
           dispatch(updateAccount(accounts[0]));
         }
       );

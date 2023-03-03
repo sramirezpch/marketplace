@@ -10,13 +10,7 @@ import { withProvider } from "../../src/hocs";
 import { ethers } from "ethers";
 
 const MintPage: NextPage<IWrapped> = ({ provider }) => {
-  const mintNft = async () => {
-    let hash = undefined;
-    const nft = new ethers.Contract(
-      contracts.nft,
-      NftAbi.abi,
-      provider?.getSigner()
-    );
+  const pinFileToPinata = async () => {
     try {
       const result = await axios.post<PinFilAxiosResponse, any>(
         "http://localhost:8080/pin-file",
@@ -26,24 +20,37 @@ const MintPage: NextPage<IWrapped> = ({ provider }) => {
         }
       );
 
-      hash = result.hash;
-
+      return result.hash;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const mint = async (nft: ethers.Contract, hash: string) => {
+    try {
       const tx = await nft.safeMint(
         await provider?.getSigner().getAddress(),
         `https://gateway.pinata.cloud/ipfs/${hash}`
       );
 
-      console.log(hash);
       await tx.wait();
 
       console.log(tx);
-    } catch (err) {
+    } catch (error) {
       if (hash) {
         await axios.delete(`http://localhost:8080/unpin-file/${hash}`);
       }
-
-      console.log(err);
+      console.log(error);
     }
+  };
+
+  const mintNft = async () => {
+    const nft = new ethers.Contract(
+      contracts.nft,
+      NftAbi.abi,
+      provider?.getSigner()
+    );
+    const hash = await pinFileToPinata();
+    await mint(nft, hash);
   };
 
   return (
