@@ -12,15 +12,18 @@ import { ethers } from "ethers";
 const MintPage: NextPage<IWrapped> = ({ provider }) => {
   const pinFileToPinata = async () => {
     try {
-      const result = await axios.post<PinFilAxiosResponse, any>(
-        "http://localhost:8080/pin-file",
+      const {
+        data: { ipfs_hash },
+      } = await axios.post<PinFilAxiosResponse, any>(
+        "http://localhost:8080/pin",
         {
           name: "Sergio1",
           lastName: "Ramirez1",
         }
       );
+      console.log("Metadata pinned successfully!");
 
-      return result.hash;
+      return ipfs_hash;
     } catch (err) {
       console.log(err);
     }
@@ -33,13 +36,13 @@ const MintPage: NextPage<IWrapped> = ({ provider }) => {
       );
 
       await tx.wait();
-
-      console.log(tx);
+      console.log("NFT minted successfully!");
     } catch (error) {
-      if (hash) {
-        await axios.delete(`http://localhost:8080/unpin-file/${hash}`);
-      }
       console.log(error);
+      if (hash) {
+        await axios.delete(`http://localhost:8080/unpin/${hash}`);
+        console.log("Metadata unpinned successfully!");
+      }
     }
   };
 
@@ -50,6 +53,7 @@ const MintPage: NextPage<IWrapped> = ({ provider }) => {
       provider?.getSigner()
     );
     const hash = await pinFileToPinata();
+    console.log("Hash: ", hash);
     await mint(nft, hash);
   };
 
