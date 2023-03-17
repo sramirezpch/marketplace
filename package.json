@@ -1,5 +1,5 @@
 {
-  "name": "nft-smart-contracts",
+  "name": "smart-contracts-addresses",
   "description": "Smart contracts addresses to be used",
   "main": "artifacts/index.ts",
   "version": "1.0.0",
