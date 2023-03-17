@@ -7,5 +7,6 @@ typechain-types/
 
 # Hardhat files
 cache/
-build/
-
+build/@openzeppelin/
+build/build-info/
+build/contracts/*/*.dbg.json
