@@ -1,17 +1,19 @@
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 jobs:
   publish:
     name: Publish to NPM registry
     runs-on: macOS-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install dependencies
-        run: npm install
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
       - name: Publish to NPM
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
