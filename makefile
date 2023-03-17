@@ -3,6 +3,7 @@ HARDHAT_DOCKERFILE="./infra/.dockerfile"
 
 COMPOSE_FILE="./docker-compose.yml"
 
+NETWORK=localhost
 run-app: clean
 	docker-compose -f $(COMPOSE_FILE) up -d --build
 
@@ -10,15 +11,11 @@ run-app: clean
 clean:
 	docker-compose -f $(COMPOSE_FILE) down --remove-orphans
 
-open-browser:
-ifeq ($(OS), Windows_NT)
-	start "$(CLIENT_LOCAL_URL)"
-else
-	open $(CLIENT_LOCAL_URL)
-endif
-
 deployment:
-	npx hardhat run ./scripts/deploy.ts --network $(if $(network),$(network),localhost)
+	npx hardhat run ./scripts/deploy.ts --network $(NETWORK)
+
+compile:
+	npx hardhat compile
 
 run-node:
 	npx hardhat node

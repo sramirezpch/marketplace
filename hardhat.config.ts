@@ -6,6 +6,9 @@ const config: HardhatUserConfig = {
   networks: {
     localhost: {},
   },
+  paths: {
+    artifacts: "./build",
+  },
 };
 
 export default config;
