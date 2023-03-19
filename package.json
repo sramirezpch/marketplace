@@ -2,7 +2,7 @@
   "name": "smart-contracts-addresses",
   "description": "Smart contracts addresses to be used",
   "main": "build/index.ts",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "keywords": [
     "nft",
     "smart contracts"
