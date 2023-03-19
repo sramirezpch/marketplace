@@ -8,8 +8,6 @@ fi
 
 contracts=($(find ./build/contracts -name "*.sol" | xargs))
 
-echo ${#contracts[@]}
-
 counter=0
 
 while [[ $counter -lt ${#contracts[@]} ]]; do
@@ -17,6 +15,6 @@ while [[ $counter -lt ${#contracts[@]} ]]; do
     # Then it splits the string by the "." to get the contract name
     contractName=$(echo ${contracts} | cut -d"/" -f4 | cut -d"." -f1)
 
-    cp ./${contracts[counter]}/${contractName}.json ./package
+    cp ${contracts[counter]}/${contractName}.json ./package
     ((counter++))
 done
