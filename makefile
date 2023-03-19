@@ -4,7 +4,9 @@ HARDHAT_DOCKERFILE="./infra/.dockerfile"
 COMPOSE_FILE="./docker-compose.yml"
 
 NETWORK=localhost
-run-app: clean
+
+run-app: 
+	make clean
 	docker-compose -f $(COMPOSE_FILE) up -d --build
 
 .PHONY: clean

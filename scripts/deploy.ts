@@ -31,7 +31,7 @@ async function main() {
 
   const filepath = path.join(
     __dirname,
-    `/../build/${environment}-addresses.json`
+    `/../package/${environment}-addresses.json`
   );
   const dirname = path.dirname(filepath);
 
