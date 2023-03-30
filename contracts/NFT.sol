@@ -13,6 +13,13 @@ contract NFT is ERC721, ERC721URIStorage {
     // ERC721(string name, string symbol)
     constructor() ERC721("NFT", "MKP") {}
 
+    function selfMint(string memory uri) public payable {
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(msg.sender, tokenId);
+        _setTokenURI(tokenId, uri);
+    }
+
     function safeMint(address to, string memory uri) public payable {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
