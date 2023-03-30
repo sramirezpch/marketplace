@@ -7,20 +7,13 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract NFT is ERC721, ERC721URIStorage, Pausable, Ownable {
+contract NFT is ERC721, ERC721URIStorage {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
 
+    // ERC721(string name, string symbol)
     constructor() ERC721("NFT", "MKP") {}
-
-    function pause() public onlyOwner {
-        _pause();
-    }
-
-    function unpause() public onlyOwner {
-        _unpause();
-    }
 
     function safeMint(address to, string memory uri) public payable {
         uint256 tokenId = _tokenIdCounter.current();
@@ -29,30 +22,15 @@ contract NFT is ERC721, ERC721URIStorage, Pausable, Ownable {
         _setTokenURI(tokenId, uri);
     }
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId,
-        uint256 batchSize
-    ) internal override whenNotPaused {
-        super._beforeTokenTransfer(from, to, tokenId, batchSize);
-    }
-
-    // The following functions are overrides required by Solidity.
-
-    function _burn(uint256 tokenId)
-        internal
-        override(ERC721, ERC721URIStorage)
-    {
+    function _burn(
+        uint256 tokenId
+    ) internal override(ERC721, ERC721URIStorage) {
         super._burn(tokenId);
     }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
+    function tokenURI(
+        uint256 tokenId
+    ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
 }
